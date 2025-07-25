@@ -1,116 +1,103 @@
-# dashboard.py
-
 import streamlit as st
 import pandas as pd
-import plotly.graph_objects as go
-from plotly.subplots import make_subplots
+import plotly.express as px
 
-st.set_page_config(page_title="Pakistan Climate Crisis Dashboard", layout="wide")
-st.title("🌍 Pakistan Climate Crisis Dashboard (2020–2025)")
+# Load Data
+@st.cache_data
+def load_data():
+    data = [
+        {'Date': '2022-03-15', 'City': 'Jacobabad', 'Province': 'Sindh', 'Max_Temp_C': 47.0, 'Min_Temp_C': 32.1, 'Avg_Temp_C': 39.55,
+         'Rainfall_mm': 0, 'Humidity_Percent': 45, 'Heat_Index_C': 52.3, 'Heatstroke_Cases': 15, 'Heat_Deaths': 2, 'Livestock_Deaths': 34,
+         'Water_Shortage_Level': 'High', 'year': 2022},
+        {'Date': '2022-03-16', 'City': 'Jacobabad', 'Province': 'Sindh', 'Max_Temp_C': 47.5, 'Min_Temp_C': 32.8, 'Avg_Temp_C': 40.15,
+         'Rainfall_mm': 0, 'Humidity_Percent': 43, 'Heat_Index_C': 53.1, 'Heatstroke_Cases': 18, 'Heat_Deaths': 3, 'Livestock_Deaths': 41,
+         'Water_Shortage_Level': 'High', 'year': 2022},
+        {'Date': '2022-04-15', 'City': 'Nawabshah', 'Province': 'Sindh', 'Max_Temp_C': 49.5, 'Min_Temp_C': 35.1, 'Avg_Temp_C': 42.3,
+         'Rainfall_mm': 0, 'Humidity_Percent': 38, 'Heat_Index_C': 55.8, 'Heatstroke_Cases': 25, 'Heat_Deaths': 5, 'Livestock_Deaths': 67,
+         'Water_Shortage_Level': 'Severe', 'year': 2022}
+    ]
+    return pd.DataFrame(data)
 
-st.markdown("""
-This dashboard presents a **multi-dimensional view of Pakistan's climate crisis** from 2020 to 2025.  
-It includes temperature trends, rainfall patterns, economic losses, droughts, floods, food insecurity, and water scarcity.
-""")
+df = load_data()
 
-# --- DATA ---
-climate_overview = pd.DataFrame({
-    'Year': [2020, 2021, 2022, 2023, 2024, 2025],
-    'Peak_Temp_C': [47.0, 45.8, 49.5, 46.5, 47.2, 50.0],
-    'Heat_Deaths': [75, 50, 90, 100, 568, 200],
-    'Rainfall_Deficit_Percent': [30, 15, 62, 25, 45, 67],
-    'Crop_Losses_MT': [2.5, 1.8, 4.5, 2.1, 3.8, 5.2],
-    'Food_Insecure_Million': [6.0, 6.5, 7.2, 7.8, 8.6, 8.6],
-    'Water_Availability_m3_capita': [1050, 1000, 950, 900, 800, 720],
-    'Economic_Loss_Billion_USD': [5.5, 4.2, 30.0, 6.8, 12.2, 8.5]
-})
+# ---- Sidebar ----
+st.set_page_config(page_title="Pakistan Heatwave Dashboard", layout="wide")
+st.sidebar.title("⚙️ Filters")
 
-rainfall_data = pd.DataFrame({
-    'Year': [2020, 2021, 2022, 2023, 2024, 2025],
-    'Annual_Rainfall_mm': [185, 215, 425, 195, 165, 82],
-    'Monsoon_Rainfall_mm': [125, 145, 285, 135, 95, 45],
-    'Deficit_from_Normal_Percent': [-30, -15, 180, -25, -45, -67],
-    'Drought_Affected_Areas_Percent': [30, 20, 15, 25, 35, 45],
-    'Flood_Events': [1, 2, 12, 3, 4, 2],
-    'Climate_Pattern': ['Moderate Drought', 'Normal/Slight Deficit', 'Extreme Floods',
-                        'Moderate Drought', 'Mixed (Drought + Floods)', 'Severe Drought']
-})
+dark_mode = st.sidebar.toggle("🌙 Dark Mode")
+view_table = st.sidebar.toggle("📋 Show Tables")
 
-# --- DASHBOARD ---
-fig = make_subplots(
-    rows=3, cols=2,
-    subplot_titles=(
-        'Temperature Trends (2020–2025)',
-        'Heat-Related Deaths',
-        'Water Availability Crisis',
-        'Food Insecurity Growth',
-        'Rainfall Patterns',
-        'Economic Impact'
-    ),
-    specs=[[{}, {}], [{}, {}], [{}, {}]]
-)
+selected_province = st.sidebar.selectbox("Select Province", ["All"] + sorted(df["Province"].unique().tolist()))
+selected_city = st.sidebar.selectbox("Select City", ["All"] + sorted(df["City"].unique().tolist()))
+selected_year = st.sidebar.selectbox("Select Year", ["All"] + sorted(df["year"].unique().tolist()))
 
-fig.add_trace(go.Scatter(
-    x=climate_overview['Year'],
-    y=climate_overview['Peak_Temp_C'],
-    mode='lines+markers',
-    name='Peak Temperature',
-    line=dict(color='red', width=3)
-), row=1, col=1)
+# Filter
+filtered_df = df.copy()
+if selected_province != "All":
+    filtered_df = filtered_df[filtered_df["Province"] == selected_province]
+if selected_city != "All":
+    filtered_df = filtered_df[filtered_df["City"] == selected_city]
+if selected_year != "All":
+    filtered_df = filtered_df[filtered_df["year"] == selected_year]
 
-fig.add_trace(go.Bar(
-    x=climate_overview['Year'],
-    y=climate_overview['Heat_Deaths'],
-    name='Heat Deaths',
-    marker_color='darkred'
-), row=1, col=2)
+# ---- Main ----
+st.title("🔥 Pakistan Heatwave Dashboard")
 
-fig.add_trace(go.Scatter(
-    x=climate_overview['Year'],
-    y=climate_overview['Water_Availability_m3_capita'],
-    mode='lines+markers',
-    name='Water Availability',
-    line=dict(color='blue', width=3)
-), row=2, col=1)
+tab1, tab2 = st.tabs(["🌡️ Temperature Analytics", "🏥 Health & Risk Monitor"])
 
-fig.add_trace(go.Scatter(
-    x=climate_overview['Year'],
-    y=climate_overview['Food_Insecure_Million'],
-    mode='lines+markers',
-    name='Food Insecurity',
-    line=dict(color='orange', width=3)
-), row=2, col=2)
+with tab1:
+    st.subheader("Max Temperature vs Heat Index")
 
-fig.add_trace(go.Bar(
-    x=rainfall_data['Year'],
-    y=rainfall_data['Annual_Rainfall_mm'],
-    name='Annual Rainfall',
-    marker_color='lightblue'
-), row=3, col=1)
+    if view_table:
+        st.dataframe(filtered_df[["Date", "City", "Max_Temp_C", "Heat_Index_C", "Humidity_Percent"]])
+    else:
+        fig = px.line(filtered_df, x="Date", y=["Max_Temp_C", "Heat_Index_C"],
+                      color_discrete_map={"Max_Temp_C": "red", "Heat_Index_C": "orange"},
+                      title="Max Temperature vs Heat Index Over Time",
+                      labels={"value": "°C", "Date": "Date", "variable": "Metric"})
+        fig.update_layout(legend_title_text="Metric", template="plotly_dark" if dark_mode else "plotly")
+        st.plotly_chart(fig, use_container_width=True)
 
-fig.add_trace(go.Bar(
-    x=rainfall_data['Year'],
-    y=rainfall_data['Monsoon_Rainfall_mm'],
-    name='Monsoon Rainfall',
-    marker_color='darkblue'
-), row=3, col=1)
+    st.divider()
 
-fig.add_trace(go.Bar(
-    x=climate_overview['Year'],
-    y=climate_overview['Economic_Loss_Billion_USD'],
-    name='Economic Loss ($B)',
-    marker_color='purple'
-), row=3, col=2)
+    st.subheader("Temperature Risk Zones")
+    zone_counts = {
+        'Extreme (>50°C)': len(filtered_df[filtered_df["Max_Temp_C"] > 50]),
+        'Severe (45–50°C)': len(filtered_df[(filtered_df["Max_Temp_C"] >= 45) & (filtered_df["Max_Temp_C"] <= 50)]),
+        'High (40–45°C)': len(filtered_df[(filtered_df["Max_Temp_C"] >= 40) & (filtered_df["Max_Temp_C"] < 45)]),
+        'Moderate (<40°C)': len(filtered_df[filtered_df["Max_Temp_C"] < 40])
+    }
 
-fig.update_layout(
-    height=1000,
-    title_text="🇵🇰 Pakistan Climate Crisis Interactive Dashboard (2020–2025)",
-    title_x=0.5,
-    showlegend=True,
-    template="plotly_white"
-)
+    zone_df = pd.DataFrame({
+        "Zone": list(zone_counts.keys()),
+        "Count": list(zone_counts.values())
+    })
 
-st.plotly_chart(fig, use_container_width=True)
+    if view_table:
+        st.dataframe(zone_df)
+    else:
+        pie = px.pie(zone_df, values="Count", names="Zone", title="Temperature Zone Distribution")
+        pie.update_layout(template="plotly_dark" if dark_mode else "plotly")
+        st.plotly_chart(pie, use_container_width=True)
 
-st.markdown("---")
-st.info("Made by Abrar Ahmad as part of the WWF Eco-Internship Project")
+with tab2:
+    st.subheader("Heatstroke Cases vs Deaths")
+
+    if view_table:
+        st.dataframe(filtered_df[["Date", "City", "Heatstroke_Cases", "Heat_Deaths"]])
+    else:
+        bar = px.bar(filtered_df, x="Date", y=["Heatstroke_Cases", "Heat_Deaths"],
+                     barmode="group", color_discrete_sequence=["orange", "red"],
+                     title="Heatstroke Cases & Deaths Over Time")
+        bar.update_layout(template="plotly_dark" if dark_mode else "plotly")
+        st.plotly_chart(bar, use_container_width=True)
+
+    st.divider()
+
+    st.subheader("🚨 Critical Alerts (Deaths > 2)")
+    critical = filtered_df[filtered_df["Heat_Deaths"] > 2]
+
+    if not critical.empty:
+        st.dataframe(critical[["Date", "City", "Heat_Deaths", "Max_Temp_C", "Heat_Index_C"]])
+    else:
+        st.info("No critical alerts based on current filters.")
