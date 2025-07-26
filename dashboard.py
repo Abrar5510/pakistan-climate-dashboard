@@ -65,7 +65,7 @@ with tab1:
         y="Duration_Days",
         color="Year",
         barmode="group",
-        color_discrete_sequence=px.colors.sequential.set3,
+        color_discrete_sequence=px.colors.sequential.set2,
         labels={"Duration_Days": "Duration (Days)"}
     )
     st.plotly_chart(fig2, use_container_width=True)
