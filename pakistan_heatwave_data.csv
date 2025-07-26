@@ -1,12 +1,11 @@
 City,Year,Period,Peak_Temp_C,Duration_Days,Deaths,Heatstroke_Cases,Agriculture_Loss_pct,Livestock_Loss,Water_Shortage_Impact
-Karachi,2024,May–Jun,49–52,~40 days,568+,7,905+,"~40%",15,000 cattle died (~USD 20 M),Massive potable & canal water shortage; urban demand surge
-Karachi,2025,Apr–Jun,up to 48,~80 days,?,Thousands,N/A,N/A,Critical urban water scarcity; reliance on tanker water
-Hyderabad,2024,May–Jun,~48,~40 days,~6,~150,N/A,n/a,Frequent water outages; reduced delivery volume (70–75/130 MGD)
-Peshawar/Charsadda (KP),2024,May–Jul,~47,~60 days,≥1,3,282,"~50%",n/a,Intermittent water cuts; heat worsened potable access
-Peshawar,2025,Jun,≈45,~30 days,0,935,Wheat/tomato/onion decline,n/a,Local water scarcity reported at camps
-Quetta,2025,Apr–Jun,45–48,~60 days,?,Rising admissions,n/a,n/a,Rural water wells drying; drinking water shortage
-Islamabad/Rawalpindi,2025,Jun 10–12,44–45,~3 days,?,Dozens hospitalized,n/a,n/a,Load‑shedding causing water pumping failure in neighborhoods
-Faisalabad & Gujranwala,2025,Jun,~44–45,~3 days,?,Heat cases reported,n/a,n/a,Mild water stress; rationing at street level
-Multan,2025,Jun,~44–45,~3 days,?,Heat cases reported,n/a,n/a,Local water supply disruption reported in news
-Sindh rural (Benazirabad etc.),2025,May–Jun,~50,~30 days,0,588,n/a,49 livestock deaths (goats/cows),Water scarcity impacting farms & households
-Sector‑wide Pakistan,2022–25 aggregate,N/A,N/A,N/A,N/A,Cotton–30%, Wheat–9%, Maize–15%, Rice–1.4%,Decline in livestock productivity; thousands dead,Megaproportional water shortage in Sindh/Punjab; canal deficits >40 %
+Karachi,2024,May-Jun,50.5,40,568,7905,40,15000 cattle died (~USD 20M),Massive potable & canal water shortage; urban demand surge
+Karachi,2025,Apr-Jun,48,80,0,2000,0,N/A,Critical urban water scarcity; reliance on tanker water
+Hyderabad,2024,May-Jun,48,40,6,150,0,N/A,Frequent water outages; reduced delivery volume (70-75/130 MGD)
+Peshawar,2024,May-Jul,47,60,1,3282,50,N/A,Intermittent water cuts; heat worsened potable access
+Peshawar,2025,Jun,45,30,0,935,25,N/A,Local water scarcity reported at camps
+Quetta,2025,Apr-Jun,46.5,60,0,100,0,N/A,Rural water wells drying; drinking water shortage
+Islamabad,2025,Jun,44.5,3,0,50,0,N/A,Load-shedding causing water pumping failure in neighborhoods
+Faisalabad,2025,Jun,44.5,3,0,25,0,N/A,Mild water stress; rationing at street level
+Multan,2025,Jun,44.5,3,0,20,0,N/A,Local water supply disruption reported in news
+Sindh Rural,2025,May-Jun,50,30,0,588,0,49 livestock deaths (goats/cows),Water scarcity impacting farms & households
