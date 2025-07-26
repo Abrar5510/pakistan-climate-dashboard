@@ -53,7 +53,7 @@ with tab1:
         y="Peak_Temp_C",
         color="Year",
         barmode="group",
-        color_discrete_sequence=px.colors.qualitative.Set2,
+        color_discrete_sequence=px.colors.qualitative.Set3,
         labels={"Peak_Temp_C": "Peak Temperature (°C)"}
     )
     st.plotly_chart(fig1, use_container_width=True)
@@ -65,7 +65,7 @@ with tab1:
         y="Duration_Days",
         color="Year",
         barmode="group",
-        color_discrete_sequence=px.colors.sequential.blugrn,
+        color_discrete_sequence=px.colors.sequential.set3,
         labels={"Duration_Days": "Duration (Days)"}
     )
     st.plotly_chart(fig2, use_container_width=True)
