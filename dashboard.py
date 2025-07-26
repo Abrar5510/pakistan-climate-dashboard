@@ -53,7 +53,7 @@ with tab1:
         y="Peak_Temp_C",
         color="Year",
         barmode="group",
-        color_discrete_sequence=px.colors.sequential.agsunset,
+        color_discrete_sequence=px.colors.qualitative.Set2,
         labels={"Peak_Temp_C": "Peak Temperature (°C)"}
     )
     st.plotly_chart(fig1, use_container_width=True)
