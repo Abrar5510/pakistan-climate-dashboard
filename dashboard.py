@@ -7,15 +7,15 @@ from plotly.subplots import make_subplots
 # 🎨 Page Configuration with Custom Theme
 
 st.set_page_config(
-page_title=“🔥 Pakistan Heatwave Dashboard”,
-layout=“wide”,
-initial_sidebar_state=“expanded”,
-page_icon=“🌡️”
+page_title= "🔥 Pakistan Heatwave Dashboard  ",
+layout= "wide  ",
+initial_sidebar_state= "expanded  ",
+page_icon= "🌡️  "
 )
 
 # 🎨 Custom CSS for Beautiful Styling
 
-st.markdown(”””
+st.markdown(  "  "  "
 
 <style>
     /* Import Google Fonts */
@@ -161,21 +161,21 @@ st.markdown(”””
     }
 </style>
 
-“””, unsafe_allow_html=True)
+ "  "  ", unsafe_allow_html=True)
 
 @st.cache_data
 def load_data():
 try:
-df = pd.read_csv(“pakistan_heatwave_data.csv”)
-df[“Year”] = df[“Year”].astype(str)
-df[“Deaths”] = df[“Deaths”].fillna(0)
-df[“Heatstroke_Cases”] = df[“Heatstroke_Cases”].fillna(0)
-df[“Agriculture_Loss_pct”] = df[“Agriculture_Loss_pct”].fillna(0)
-df[“Livestock_Loss”] = df[“Livestock_Loss”].fillna(“No data available”)
-df[“Water_Shortage_Impact”] = df[“Water_Shortage_Impact”].fillna(“No significant impact”)
+df = pd.read_csv( "pakistan_heatwave_data.csv  ")
+df[ "Year  "] = df[ "Year  "].astype(str)
+df[ "Deaths  "] = df[ "Deaths  "].fillna(0)
+df[ "Heatstroke_Cases  "] = df[ "Heatstroke_Cases  "].fillna(0)
+df[ "Agriculture_Loss_pct  "] = df[ "Agriculture_Loss_pct  "].fillna(0)
+df[ "Livestock_Loss  "] = df[ "Livestock_Loss  "].fillna( "No data available  ")
+df[ "Water_Shortage_Impact  "] = df[ "Water_Shortage_Impact  "].fillna( "No significant impact  ")
 return df
 except FileNotFoundError:
-st.error(“🚨 CSV file not found. Please make sure "pakistan_heatwave_data.csv" is in the same directory.”)
+st.error( "🚨 CSV file not found. Please make sure "pakistan_heatwave_data.csv" is in the same directory.  ")
 return pd.DataFrame()
 
 df = load_data()
@@ -185,7 +185,7 @@ st.stop()
 
 # 🎨 Beautiful Header
 
-st.markdown(”””
+st.markdown(  "  "  "
 
 <div class="main-header">
     <h1 class="main-title">🔥 Pakistan Heatwave Analytics</h1>
@@ -195,94 +195,94 @@ st.markdown(”””
 
 # 🎨 Enhanced Sidebar
 
-st.sidebar.markdown(”””
+st.sidebar.markdown(  "  "  "
 
 <div class="sidebar-header">
     <h2 style="color: white; margin: 0; font-size: 1.5rem;">🔍 Smart Filters</h2>
 </div>
 """, unsafe_allow_html=True)
 
-cities = sorted(df[“City”].dropna().unique().tolist())
+cities = sorted(df[ "City  "].dropna().unique().tolist())
 selected_cities = st.sidebar.multiselect(
-“🏙️ Select Cities to Compare”,
+ "🏙️ Select Cities to Compare  ",
 cities,
 default=[cities[0]] if cities else [],
-help=“Choose one or more cities for comparison”
+help= "Choose one or more cities for comparison  "
 )
 
-years = sorted(df[“Year”].dropna().unique().tolist())
+years = sorted(df[ "Year  "].dropna().unique().tolist())
 selected_years = st.sidebar.multiselect(
-“📅 Select Years to Compare”,
+ "📅 Select Years to Compare  ",
 years,
 default=years[-2:] if len(years) >= 2 else years,
-help=“Select years for temporal analysis”
+help= "Select years for temporal analysis  "
 )
 
 # Filter data
 
 if selected_cities and selected_years:
-filtered_df = df[(df[“City”].isin(selected_cities)) & (df[“Year”].isin(selected_years))]
+filtered_df = df[(df[ "City  "].isin(selected_cities)) & (df[ "Year  "].isin(selected_years))]
 else:
 filtered_df = pd.DataFrame()
 
 if filtered_df.empty:
-st.markdown(”””
+st.markdown(  "  "  "
 <div style="background: linear-gradient(45deg, #ff6b6b, #feca57); padding: 2rem; border-radius: 15px; text-align: center; color: white;">
 <h2>⚠️ No Data Available</h2>
 <p>Please adjust your filters to view the dashboard</p>
 </div>
-“””, unsafe_allow_html=True)
+ "  "  ", unsafe_allow_html=True)
 st.stop()
 
 # 🎨 Enhanced Metrics with Beautiful Cards
 
-st.markdown(”### 📊 Dashboard Overview”)
+st.markdown(  "### 📊 Dashboard Overview  ")
 col1, col2, col3, col4 = st.columns(4)
 
 with col1:
-st.markdown(f”””
+st.markdown(f  "  "  "
 <div class="metric-card">
 <div class="metric-value">{len(selected_cities)}</div>
 <div class="metric-label">🏙️ Cities Selected</div>
 </div>
-“””, unsafe_allow_html=True)
+ "  "  ", unsafe_allow_html=True)
 
 with col2:
-st.markdown(f”””
+st.markdown(f  "  "  "
 <div class="metric-card">
 <div class="metric-value">{len(selected_years)}</div>
 <div class="metric-label">📅 Years Analyzed</div>
 </div>
-“””, unsafe_allow_html=True)
+ "  "  ", unsafe_allow_html=True)
 
 with col3:
-st.markdown(f”””
+st.markdown(f  "  "  "
 <div class="metric-card">
 <div class="metric-value">{len(filtered_df)}</div>
 <div class="metric-label">📋 Total Records</div>
 </div>
-“””, unsafe_allow_html=True)
+ "  "  ", unsafe_allow_html=True)
 
 with col4:
-avg_temp = filtered_df[“Peak_Temp_C”].mean()
-st.markdown(f”””
+avg_temp = filtered_df[ "Peak_Temp_C  "].mean()
+st.markdown(f  "  "  "
 <div class="metric-card">
 <div class="metric-value">{avg_temp:.1f}°C</div>
 <div class="metric-label">🌡️ Avg Peak Temp</div>
 </div>
-“””, unsafe_allow_html=True)
+ "  "  ", unsafe_allow_html=True)
 
 # 🎨 Enhanced Tabs with Beautiful Content
 
 tab1, tab2, tab3, tab4 = st.tabs([
-“🌡️ Temperature Analysis”,
-“⚕️ Health Impact”,
-“🌾 Agricultural Impact”,
-“💧 Water & Climate Crisis”
+ "🌡️ Temperature Analysis  ",
+ "⚕️ Health Impact  ",
+ "🌾 Agricultural Impact  ",
+ "💧 Water & Climate Crisis  "
 ])
 
 with tab1:
-st.markdown(”<div class="chart-container">”, unsafe_allow_html=True)
+st.markdown(  "<div class="chart-container">  ", unsafe_allow_html=True)
 
 ```
 col1, col2 = st.columns(2)
@@ -368,7 +368,7 @@ st.markdown("</div>", unsafe_allow_html=True)
 ```
 
 with tab2:
-st.markdown(”<div class="chart-container">”, unsafe_allow_html=True)
+st.markdown(  "<div class="chart-container">  ", unsafe_allow_html=True)
 
 ```
 col1, col2 = st.columns(2)
@@ -464,7 +464,7 @@ st.markdown("</div>", unsafe_allow_html=True)
 ```
 
 with tab3:
-st.markdown(”<div class="chart-container">”, unsafe_allow_html=True)
+st.markdown(  "<div class="chart-container">  ", unsafe_allow_html=True)
 
 ```
 st.markdown("#### 🌾 Agricultural Impact Analysis")
@@ -520,7 +520,7 @@ st.markdown("</div>", unsafe_allow_html=True)
 ```
 
 with tab4:
-st.markdown(”<div class="chart-container">”, unsafe_allow_html=True)
+st.markdown(  "<div class="chart-container">  ", unsafe_allow_html=True)
 
 ```
 st.markdown("#### 💧 Water Crisis Impact")
@@ -565,9 +565,9 @@ st.markdown("</div>", unsafe_allow_html=True)
 
 # 🎨 Enhanced Raw Data Section
 
-with st.expander(“📋 View & Download Raw Data”, expanded=False):
+with st.expander( "📋 View & Download Raw Data  ", expanded=False):
 if not filtered_df.empty:
-st.markdown(”#### 📊 Filtered Dataset”)
+st.markdown(  "#### 📊 Filtered Dataset  ")
 
 ```
     # Enhanced dataframe with styling
@@ -593,7 +593,7 @@ else:
 # 🎨 Enhanced Summary Statistics
 
 if not filtered_df.empty:
-st.markdown(”### 📈 Key Insights & Statistics”)
+st.markdown(  "### 📈 Key Insights & Statistics  ")
 
 ```
 col1, col2, col3, col4 = st.columns(4)
@@ -651,7 +651,7 @@ with col4:
 
 # 🎨 Beautiful Footer
 
-st.markdown(”””
+st.markdown(  "  "  "
 
 <div class="footer">
     <h3 style="margin: 0; color: #ecf0f1;">📊 Pakistan Heatwave Analytics Dashboard</h3>
