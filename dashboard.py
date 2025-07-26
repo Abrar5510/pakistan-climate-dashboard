@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-import plotly.graph_objects as go
 
 st.set_page_config(page_title="Pakistan Heatwave Dashboard", layout="wide")
 
@@ -27,7 +26,6 @@ if df.empty:
 
 st.title("🔥 Pakistan Heatwave Analysis Dashboard")
 
-# Sidebar filters
 st.sidebar.title("🔍 Filter Options")
 
 cities = sorted(df['City'].dropna().unique().tolist())
@@ -44,12 +42,8 @@ selected_years = st.sidebar.multiselect(
     default=years[-2:] if len(years) >= 2 else years
 )
 
-# Filter data
 if selected_cities and selected_years:
-    filtered_df = df[
-        (df["City"].isin(selected_cities)) &
-        (df["Year"].isin(selected_years))
-    ]
+    filtered_df = df[(df["City"].isin(selected_cities)) & (df["Year"].isin(selected_years))]
 else:
     filtered_df = pd.DataFrame()
 
@@ -57,19 +51,15 @@ if filtered_df.empty:
     st.warning("⚠️ No data available for selected cities and years. Please adjust your filters.")
     st.stop()
 
-# Layout metrics
 col1, col2 = st.columns(2)
-
 with col1:
     st.metric("Cities Selected", len(selected_cities))
     st.metric("Years Selected", len(selected_years))
-
 with col2:
     st.metric("Total Records", len(filtered_df))
     avg_temp = filtered_df['Peak_Temp_C'].mean()
     st.metric("Average Peak Temperature", f"{avg_temp:.1f}°C")
 
-# Tabs
 tab1, tab2, tab3, tab4 = st.tabs([
     "📊 Temperature Analysis",
     "⚕️ Health Impact",
@@ -80,26 +70,24 @@ tab1, tab2, tab3, tab4 = st.tabs([
 with tab1:
     st.subheader("Peak Temperature Comparison")
     fig1 = px.bar(
-        filtered_df,
-        x='City',
-        y='Peak_Temp_C',
-        color='Year',
-        barmode='group',
-        title="Peak Temperature by City and Year",
-        labels={'Peak_Temp_C': 'Peak Temperature (°C)'}
+        filtered_df, x='City', y='Peak_Temp_C', color='Year',
+        barmode='group', color_discrete_sequence=px.colors.sequential.Turbo,
+        labels={'Peak_Temp_C': 'Peak Temperature (°C)'},
+        title="🌡️ Peak Temperature by City and Year"
     )
+    fig1.update_traces(hovertemplate="<b>%{x}</b><br>Temp: %{y}°C<br>Year: %{customdata[0]}", customdata=filtered_df[['Year']])
+    fig1.update_layout(height=500, plot_bgcolor='rgba(0,0,0,0)')
     st.plotly_chart(fig1, use_container_width=True)
 
     st.subheader("Heatwave Duration")
     fig2 = px.bar(
-        filtered_df,
-        x='City',
-        y='Duration_Days',
-        color='Year',
-        barmode='group',
-        title="Heatwave Duration by City and Year",
-        labels={'Duration_Days': 'Duration (Days)'}
+        filtered_df, x='City', y='Duration_Days', color='Year',
+        barmode='group', color_discrete_sequence=px.colors.sequential.Plasma,
+        labels={'Duration_Days': 'Duration (Days)'},
+        title="🕒 Heatwave Duration by City and Year"
     )
+    fig2.update_traces(hovertemplate="<b>%{x}</b><br>Duration: %{y} Days<br>Year: %{customdata[0]}", customdata=filtered_df[['Year']])
+    fig2.update_layout(height=500, plot_bgcolor='rgba(0,0,0,0)')
     st.plotly_chart(fig2, use_container_width=True)
 
 with tab2:
@@ -108,28 +96,26 @@ with tab2:
     with col1:
         st.subheader("Deaths from Heatwaves")
         fig3 = px.bar(
-            filtered_df,
-            x='City',
-            y='Deaths',
-            color='Year',
-            barmode='group',
-            title="Heat-related Deaths"
+            filtered_df, x='City', y='Deaths', color='Year',
+            barmode='group', color_discrete_sequence=px.colors.sequential.Reds,
+            title="☠️ Heat-related Deaths"
         )
+        fig3.update_traces(hovertemplate="<b>%{x}</b><br>Deaths: %{y}<br>Year: %{customdata[0]}", customdata=filtered_df[['Year']])
+        fig3.update_layout(height=400, plot_bgcolor='rgba(0,0,0,0)')
         st.plotly_chart(fig3, use_container_width=True)
 
     with col2:
         st.subheader("Heatstroke Cases")
         fig4 = px.bar(
-            filtered_df,
-            x='City',
-            y='Heatstroke_Cases',
-            color='Year',
-            barmode='group',
-            title="Heatstroke Cases Reported"
+            filtered_df, x='City', y='Heatstroke_Cases', color='Year',
+            barmode='group', color_discrete_sequence=px.colors.sequential.Oranges,
+            title="💥 Heatstroke Cases Reported"
         )
+        fig4.update_traces(hovertemplate="<b>%{x}</b><br>Cases: %{y}<br>Year: %{customdata[0]}", customdata=filtered_df[['Year']])
+        fig4.update_layout(height=400, plot_bgcolor='rgba(0,0,0,0)')
         st.plotly_chart(fig4, use_container_width=True)
 
-    st.subheader("Health Impact Summary")
+    st.subheader("🧾 Health Impact Summary")
     health_summary = filtered_df.groupby(['City', 'Year']).agg({
         'Deaths': 'sum',
         'Heatstroke_Cases': 'sum',
@@ -140,16 +126,15 @@ with tab2:
 with tab3:
     st.subheader("Agricultural Losses")
     fig5 = px.bar(
-        filtered_df,
-        x='City',
-        y='Agriculture_Loss_pct',
-        color='Year',
-        barmode='group',
-        title="Agricultural Losses by City and Year"
+        filtered_df, x='City', y='Agriculture_Loss_pct', color='Year',
+        barmode='group', color_discrete_sequence=px.colors.sequential.Aggrnyl,
+        labels={'Agriculture_Loss_pct': 'Agriculture Loss (%)'},
+        title="🌽 Agricultural Losses by City and Year"
     )
+    fig5.update_layout(height=500, plot_bgcolor='rgba(0,0,0,0)')
     st.plotly_chart(fig5, use_container_width=True)
 
-    st.subheader("Livestock Impact Details")
+    st.subheader("🐄 Livestock Impact")
     for _, row in filtered_df.iterrows():
         if row['Livestock_Loss'] != "No data available":
             st.info(f"**{row['City']} ({row['Year']})** — {row['Livestock_Loss']}")
@@ -160,23 +145,26 @@ with tab4:
         if row['Water_Shortage_Impact'] != "No significant impact":
             st.warning(f"**{row['City']} ({row['Year']})** — {row['Water_Shortage_Impact']}")
 
-    st.subheader("Temperature vs Duration Analysis")
+    st.subheader("💧 Temperature vs Duration Analysis")
     fig6 = px.scatter(
         filtered_df,
         x='Peak_Temp_C',
         y='Duration_Days',
         size='Deaths',
         color='City',
+        hover_name='City',
         hover_data=['Year', 'Heatstroke_Cases'],
-        title="Peak Temperature vs Duration"
+        title="🔥 Peak Temperature vs Duration (Bubble = Deaths)",
+        color_discrete_sequence=px.colors.qualitative.Dark2
     )
+    fig6.update_layout(height=500, plot_bgcolor='rgba(0,0,0,0)')
+    fig6.update_traces(marker=dict(opacity=0.7, line=dict(width=1, color='DarkSlateGrey')))
     st.plotly_chart(fig6, use_container_width=True)
 
-# Raw data
+# Raw Data + Download
 with st.expander("📋 View Raw Data"):
     if not filtered_df.empty:
         st.dataframe(filtered_df, use_container_width=True)
-
         csv = filtered_df.to_csv(index=False)
         st.download_button(
             label="📥 Download Filtered Data as CSV",
