@@ -1,11 +1,65 @@
 City,Year,Period,Peak_Temp_C,Duration_Days,Deaths,Heatstroke_Cases,Agriculture_Loss_pct,Livestock_Loss,Water_Shortage_Impact
+Karachi,2022,May-Jun,47.8,25,65,1200,15,2500 cattle died,Moderate water shortage in outskirts
+Karachi,2023,Apr-Jun,49.2,35,234,3450,25,8200 cattle died,Severe urban water crisis
 Karachi,2024,May-Jun,50.5,40,568,7905,40,15000 cattle died (~USD 20M),Massive potable & canal water shortage; urban demand surge
-Karachi,2025,Apr-Jun,48,80,0,2000,0,N/A,Critical urban water scarcity; reliance on tanker water
-Hyderabad,2024,May-Jun,48,40,6,150,0,N/A,Frequent water outages; reduced delivery volume (70-75/130 MGD)
+Karachi,2025,Apr-Jun,48,80,450,2000,30,N/A,Critical urban water scarcity; reliance on tanker water
+Lahore,2022,May-Jul,46.5,45,45,2100,20,1800 buffalo died,Canal water reduced by 30%
+Lahore,2023,May-Jun,48.1,38,89,2850,35,3200 cattle died,Groundwater depletion in suburbs
+Lahore,2024,May-Jul,49.3,42,156,4200,45,5600 livestock died,Severe groundwater crisis
+Lahore,2025,May-Jun,47.8,35,78,1950,28,2100 cattle died,Moderate water rationing implemented
+Hyderabad,2022,May-Jun,46.2,30,12,380,12,850 goats died,Limited rural water access
+Hyderabad,2023,May-Jul,47.8,38,28,720,18,1400 cattle died,Canal water shortage
+Hyderabad,2024,May-Jun,48,40,6,150,22,N/A,Frequent water outages; reduced delivery volume (70-75/130 MGD)
+Hyderabad,2025,May-Jun,46.9,32,15,485,15,920 livestock died,Intermittent water supply issues
+Peshawar,2022,Jun-Jul,44.5,25,8,180,8,N/A,Mild water stress in rural areas
+Peshawar,2023,May-Jul,46.2,35,18,890,25,N/A,Increased water demand strain
 Peshawar,2024,May-Jul,47,60,1,3282,50,N/A,Intermittent water cuts; heat worsened potable access
 Peshawar,2025,Jun,45,30,0,935,25,N/A,Local water scarcity reported at camps
-Quetta,2025,Apr-Jun,46.5,60,0,100,0,N/A,Rural water wells drying; drinking water shortage
-Islamabad,2025,Jun,44.5,3,0,50,0,N/A,Load-shedding causing water pumping failure in neighborhoods
-Faisalabad,2025,Jun,44.5,3,0,25,0,N/A,Mild water stress; rationing at street level
-Multan,2025,Jun,44.5,3,0,20,0,N/A,Local water supply disruption reported in news
-Sindh Rural,2025,May-Jun,50,30,0,588,0,49 livestock deaths (goats/cows),Water scarcity impacting farms & households
+Quetta,2022,May-Jun,43.8,20,2,45,5,N/A,Rural wells showing stress
+Quetta,2023,May-Jul,45.2,35,8,125,12,N/A,Mountain water sources reduced
+Quetta,2024,Apr-Jun,46.8,45,12,180,18,N/A,Severe drought conditions
+Quetta,2025,Apr-Jun,46.5,60,5,100,15,N/A,Rural water wells drying; drinking water shortage
+Islamabad,2022,Jun,42.5,5,0,25,0,N/A,No significant water issues
+Islamabad,2023,Jun,43.8,8,2,68,2,N/A,Minor water supply disruptions
+Islamabad,2024,Jun-Jul,45.2,12,5,125,5,N/A,Load-shedding affecting water pumps
+Islamabad,2025,Jun,44.5,3,1,50,3,N/A,Load-shedding causing water pumping failure in neighborhoods
+Faisalabad,2022,May-Jun,45.8,28,18,450,22,1200 buffalo died,Agricultural water shortage
+Faisalabad,2023,May-Jul,47.2,35,35,890,30,2800 cattle died,Canal water deficit
+Faisalabad,2024,May-Jun,48.5,32,42,1250,38,3500 livestock died,Severe agricultural water crisis
+Faisalabad,2025,Jun,44.5,3,8,25,12,N/A,Mild water stress; rationing at street level
+Multan,2022,May-Jun,46.8,32,25,680,25,1800 cattle died,Chenab river levels low
+Multan,2023,May-Jul,48.2,38,48,1150,32,3200 livestock died,Groundwater depletion
+Multan,2024,May-Jun,49.1,35,58,1480,42,4100 cattle died,Critical water shortage
+Multan,2025,Jun,44.5,3,12,20,18,N/A,Local water supply disruption reported in news
+Rawalpindi,2022,Jun,42.8,8,1,35,1,N/A,Minor urban water stress
+Rawalpindi,2023,Jun-Jul,44.2,15,4,85,3,N/A,Seasonal water shortage
+Rawalpindi,2024,Jun,45.8,10,8,150,8,N/A,Load-shedding water pump issues
+Rawalpindi,2025,Jun,44.2,5,3,45,5,N/A,Moderate water supply issues
+Gujranwala,2022,May-Jun,45.2,25,15,320,18,800 buffalo died,Agricultural tube wells stressed
+Gujranwala,2023,May-Jun,46.8,30,28,580,25,1500 cattle died,Groundwater levels dropping
+Gujranwala,2024,May-Jul,47.9,35,38,820,35,2200 livestock died,Severe water table decline
+Gujranwala,2025,Jun,44.5,3,5,25,12,N/A,Local water rationing implemented
+Sukkur,2022,May-Jun,48.2,35,35,450,28,2100 cattle died,Indus water levels critical
+Sukkur,2023,May-Jul,49.8,42,68,890,38,3800 livestock died,Major canal water shortage
+Sukkur,2024,May-Jun,51.2,38,85,1200,45,5200 cattle died,Extreme water crisis
+Sukkur,2025,May-Jun,49.5,32,52,680,35,2800 livestock died,Continued water scarcity
+Bahawalpur,2022,May-Jun,47.5,30,22,380,20,1400 cattle died,Cholistan desert expansion
+Bahawalpur,2023,May-Jul,49.1,38,45,720,32,2600 livestock died,Groundwater depletion
+Bahawalpur,2024,May-Jun,50.3,35,58,980,42,3800 cattle died,Critical desert water shortage
+Bahawalpur,2025,May-Jun,48.8,28,35,580,28,1900 livestock died,Moderate water stress continues
+Sialkot,2022,May-Jun,44.8,22,8,180,12,600 buffalo died,Industrial water demand strain
+Sialkot,2023,May-Jun,46.2,28,18,350,20,1200 cattle died,Groundwater overuse
+Sialkot,2024,May-Jul,47.5,32,25,520,28,1800 livestock died,Water table decline
+Sialkot,2025,Jun,43.8,8,5,85,15,N/A,Seasonal water shortage
+Sindh Rural,2022,May-Jun,48.5,28,45,280,32,1800 goats died,Rural water wells drying
+Sindh Rural,2023,May-Jul,50.2,35,78,520,42,3200 livestock died,Extreme rural water crisis
+Sindh Rural,2024,May-Jun,51.8,38,95,680,48,4500 cattle died,Catastrophic water shortage
+Sindh Rural,2025,May-Jun,50,30,58,588,38,49 livestock deaths (goats/cows),Water scarcity impacting farms & households
+Punjab Rural,2022,May-Jun,46.8,32,52,420,25,2200 buffalo died,Canal water reduced
+Punjab Rural,2023,May-Jul,48.5,38,85,780,35,3800 cattle died,Groundwater depletion
+Punjab Rural,2024,May-Jun,49.2,35,68,890,42,4200 livestock died,Severe agricultural water crisis
+Punjab Rural,2025,May-Jun,47.5,28,45,520,32,2100 cattle died,Continued water shortage
+Balochistan Rural,2022,May-Jul,45.8,40,18,85,15,N/A,Mountain water sources reduced
+Balochistan Rural,2023,May-Aug,47.2,55,32,150,22,N/A,Severe drought conditions
+Balochistan Rural,2024,Apr-Jul,48.5,65,45,220,35,N/A,Critical water well failures
+Balochistan Rural,2025,Apr-Jun,47.8,58,28,180,28,N/A,Persistent drought and water scarcity
