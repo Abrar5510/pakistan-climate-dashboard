@@ -7,10 +7,10 @@ from plotly.subplots import make_subplots
 # Page Configuration with Custom Theme
 
 st.set_page_config(
-page_title=“Pakistan Heatwave Dashboard”,
-layout=“wide”,
-initial_sidebar_state=“expanded”,
-page_icon=“🌡️”
+page_title="Pakistan Heatwave Dashboard",
+layout="wide",
+initial_sidebar_state="expanded",
+page_icon="🌡️"
 )
 
 # Custom CSS for Beautiful Styling
@@ -146,16 +146,16 @@ st.markdown(’’’
 @st.cache_data
 def load_data():
 try:
-df = pd.read_csv(“pakistan_heatwave_data.csv”)
+df = pd.read_csv("pakistan_heatwave_data.csv")
 df[‘Year’] = df[‘Year’].astype(str)
 df[‘Deaths’] = df[‘Deaths’].fillna(0)
 df[‘Heatstroke_Cases’] = df[‘Heatstroke_Cases’].fillna(0)
 df[‘Agriculture_Loss_pct’] = df[‘Agriculture_Loss_pct’].fillna(0)
-df[‘Livestock_Loss’] = df[‘Livestock_Loss’].fillna(“No data available”)
-df[‘Water_Shortage_Impact’] = df[‘Water_Shortage_Impact’].fillna(“No significant impact”)
+df[‘Livestock_Loss’] = df[‘Livestock_Loss’].fillna("No data available")
+df[‘Water_Shortage_Impact’] = df[‘Water_Shortage_Impact’].fillna("No significant impact")
 return df
 except FileNotFoundError:
-st.error(“CSV file not found. Please make sure ‘pakistan_heatwave_data.csv’ is in the same directory.”)
+st.error("CSV file not found. Please make sure ‘pakistan_heatwave_data.csv’ is in the same directory.")
 return pd.DataFrame()
 
 df = load_data()
@@ -184,24 +184,24 @@ st.sidebar.markdown(’’’
 
 cities = sorted(df[‘City’].dropna().unique().tolist())
 selected_cities = st.sidebar.multiselect(
-“🏙️ Select Cities to Compare”,
+"🏙️ Select Cities to Compare",
 cities,
 default=[cities[0]] if cities else [],
-help=“Choose one or more cities for comparison”
+help="Choose one or more cities for comparison"
 )
 
 years = sorted(df[‘Year’].dropna().unique().tolist())
 selected_years = st.sidebar.multiselect(
-“📅 Select Years to Compare”,
+"📅 Select Years to Compare",
 years,
 default=years[-2:] if len(years) >= 2 else years,
-help=“Select years for temporal analysis”
+help="Select years for temporal analysis"
 )
 
 # Filter data
 
 if selected_cities and selected_years:
-filtered_df = df[(df[“City”].isin(selected_cities)) & (df[“Year”].isin(selected_years))]
+filtered_df = df[(df["City"].isin(selected_cities)) & (df["Year"].isin(selected_years))]
 else:
 filtered_df = pd.DataFrame()
 
@@ -216,7 +216,7 @@ st.stop()
 
 # Enhanced Metrics with Beautiful Cards
 
-st.markdown(”### 📊 Dashboard Overview”)
+st.markdown("### 📊 Dashboard Overview")
 col1, col2, col3, col4 = st.columns(4)
 
 with col1:
@@ -255,10 +255,10 @@ st.markdown(f’’’
 # Enhanced Tabs with Beautiful Content
 
 tab1, tab2, tab3, tab4 = st.tabs([
-“🌡️ Temperature Analysis”,
-“⚕️ Health Impact”,
-“🌾 Agricultural Impact”,
-“💧 Water & Climate Crisis”
+"🌡️ Temperature Analysis",
+"⚕️ Health Impact",
+"🌾 Agricultural Impact",
+"💧 Water & Climate Crisis"
 ])
 
 with tab1:
@@ -545,9 +545,9 @@ st.markdown('</div>', unsafe_allow_html=True)
 
 # Enhanced Raw Data Section
 
-with st.expander(“📋 View & Download Raw Data”, expanded=False):
+with st.expander("📋 View & Download Raw Data", expanded=False):
 if not filtered_df.empty:
-st.markdown(”#### 📊 Filtered Dataset”)
+st.markdown("#### 📊 Filtered Dataset")
 
 ```
     # Enhanced dataframe with styling
@@ -573,7 +573,7 @@ else:
 # Enhanced Summary Statistics
 
 if not filtered_df.empty:
-st.markdown(”### 📈 Key Insights & Statistics”)
+st.markdown("### 📈 Key Insights & Statistics")
 
 ```
 col1, col2, col3, col4 = st.columns(4)
@@ -582,7 +582,7 @@ with col1:
     hottest_temp = filtered_df['Peak_Temp_C'].max()
     hottest = filtered_df.loc[filtered_df['Peak_Temp_C'].idxmax()]
     st.markdown(f'''
-    <div class="metric-card" style="background: linear-gradient(45deg, #ff6b6b, #ff7675);">
+    <div class="metric-card"style="background: linear-gradient(45deg, #ff6b6b, #ff7675);">
         <div class="metric-value">{hottest_temp:.1f}°C</div>
         <div class="metric-label">🔥 Highest Temperature</div>
         <div style="font-size: 0.8rem; margin-top: 0.5rem; opacity: 0.8;">
@@ -594,7 +594,7 @@ with col1:
 with col2:
     total_deaths = int(filtered_df['Deaths'].sum())
     st.markdown(f'''
-    <div class="metric-card" style="background: linear-gradient(45deg, #fd79a8, #fdcb6e);">
+    <div class="metric-card"style="background: linear-gradient(45deg, #fd79a8, #fdcb6e);">
         <div class="metric-value">{total_deaths}</div>
         <div class="metric-label">☠️ Total Deaths</div>
         <div style="font-size: 0.8rem; margin-top: 0.5rem; opacity: 0.8;">
@@ -606,7 +606,7 @@ with col2:
 with col3:
     total_cases = int(filtered_df['Heatstroke_Cases'].sum())
     st.markdown(f'''
-    <div class="metric-card" style="background: linear-gradient(45deg, #a55eea, #3742fa);">
+    <div class="metric-card"style="background: linear-gradient(45deg, #a55eea, #3742fa);">
         <div class="metric-value">{total_cases}</div>
         <div class="metric-label">🏥 Heatstroke Cases</div>
         <div style="font-size: 0.8rem; margin-top: 0.5rem; opacity: 0.8;">
@@ -619,7 +619,7 @@ with col4:
     longest_duration = filtered_df['Duration_Days'].max()
     longest = filtered_df.loc[filtered_df['Duration_Days'].idxmax()]
     st.markdown(f'''
-    <div class="metric-card" style="background: linear-gradient(45deg, #26de81, #20bf6b);">
+    <div class="metric-card"style="background: linear-gradient(45deg, #26de81, #20bf6b);">
         <div class="metric-value">{longest_duration}</div>
         <div class="metric-label">⏱️ Longest Heatwave</div>
         <div style="font-size: 0.8rem; margin-top: 0.5rem; opacity: 0.8;">
