@@ -257,4 +257,3 @@ if not filtered_df.empty:
 # Footer
 st.markdown("---")
 st.caption("📊 Data Source: Pakistan Meteorological Department & Health Ministry Reports (2022–2025)")
-st.caption("🔧 Dashboard built with Streamlit & Plotly")
