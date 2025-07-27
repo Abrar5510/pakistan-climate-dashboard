@@ -6,20 +6,89 @@ from plotly.subplots import make_subplots
 
 # Page Configuration
 st.set_page_config(
-    page_title="Pakistan Heatwave Dashboard",
+    page_title="🔥 Pakistan Heatwave Dashboard",
     layout="wide",
     initial_sidebar_state="expanded",
     page_icon="🌡️"
 )
 
-# Custom CSS
-st.markdown("""
+# Custom CSS Styling
+st.markdown('''
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
-    .main { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); font-family: 'Poppins', sans-serif; }
-</style>
-""", unsafe_allow_html=True)
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
+    .main {
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        font-family: 'Inter', sans-serif;
+    }
+
+    .main-header {
+        background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%);
+        padding: 3rem 2rem;
+        border-radius: 16px;
+        margin-bottom: 2rem;
+        text-align: center;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .main-title {
+        font-size: 3.2rem;
+        font-weight: 700;
+        color: white;
+        margin: 0;
+        letter-spacing: -0.02em;
+    }
+
+    .main-subtitle {
+        font-size: 1.1rem;
+        color: #cbd5e1;
+        margin-top: 0.75rem;
+        font-weight: 400;
+    }
+
+    .sidebar-header {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+        text-align: center;
+        border: 1px solid #334155;
+    }
+
+    .metric-card {
+        background: white;
+        padding: 2rem 1.5rem;
+        border-radius: 12px;
+        text-align: center;
+        margin: 0.5rem 0;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        border: 1px solid #e2e8f0;
+        transition: all 0.3s ease;
+    }
+
+    .metric-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    }
+
+    .metric-value {
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin: 0;
+        color: #1e293b;
+    }
+
+    .metric-label {
+        font-size: 0.9rem;
+        color: #64748b;
+        margin-top: 0.5rem;
+        font-weight: 500;
+    }
+</style>
+''', unsafe_allow_html=True)
+
+# Load Data
 @st.cache_data
 def load_data():
     try:
@@ -32,108 +101,57 @@ def load_data():
         df['Water_Shortage_Impact'] = df['Water_Shortage_Impact'].fillna("No significant impact")
         return df
     except FileNotFoundError:
-        st.error("CSV file not found. Please make sure 'pakistan_heatwave_data.csv' is in the same directory.")
+        st.error("🚨 CSV file not found. Please make sure 'pakistan_heatwave_data.csv' is in the same directory.")
         return pd.DataFrame()
 
 df = load_data()
+
 if df.empty:
     st.stop()
 
-# Header
-st.markdown("""
-<div style='background: linear-gradient(90deg, #ff6b6b, #feca57, #48dbfb, #ff9ff3, #54a0ff); padding: 2rem; border-radius: 20px; text-align: center;'>
-    <h1 style='color: white; font-size: 3rem;'>🔥 Pakistan Heatwave Analytics</h1>
-    <p style='color: white; font-size: 1.2rem;'>Advanced Climate Impact Dashboard • Real-time Data Insights</p>
+# Header Section
+st.markdown('''
+<div class="main-header">
+    <h1 class="main-title">🔥 Pakistan Heatwave Analytics</h1>
+    <p class="main-subtitle">Advanced Climate Impact Dashboard & Data Insights</p>
 </div>
-""", unsafe_allow_html=True)
+''', unsafe_allow_html=True)
 
 # Sidebar Filters
-st.sidebar.header("🔍 Smart Filters")
-cities = sorted(df['City'].dropna().unique().tolist())
-selected_cities = st.sidebar.multiselect("🏙️ Select Cities to Compare", cities, default=cities[:1])
-years = sorted(df['Year'].dropna().unique().tolist())
-selected_years = st.sidebar.multiselect("📅 Select Years to Compare", years, default=years[-2:])
+st.sidebar.markdown('''
+<div class="sidebar-header">
+    <h2 style="color: white; margin: 0; font-size: 1.4rem; font-weight: 600;">🔍 Filter Controls</h2>
+</div>
+''', unsafe_allow_html=True)
 
-# Filtered Data
+cities = sorted(df['City'].dropna().unique().tolist())
+selected_cities = st.sidebar.multiselect(
+    "🏙️ Select Cities to Compare",
+    cities,
+    default=[cities[0]] if cities else [],
+    help="Choose one or more cities for comparison"
+)
+
+years = sorted(df['Year'].dropna().unique().tolist())
+selected_years = st.sidebar.multiselect(
+    "📅 Select Years to Compare",
+    years,
+    default=years[-2:] if len(years) >= 2 else years,
+    help="Select years for temporal analysis"
+)
+
+# Filter Data
 if selected_cities and selected_years:
     filtered_df = df[(df["City"].isin(selected_cities)) & (df["Year"].isin(selected_years))]
 else:
     filtered_df = pd.DataFrame()
 
 if filtered_df.empty:
-    st.warning("⚠️ No Data Available. Please adjust your filters.")
+    st.markdown('''
+    <div style="background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+                padding: 2rem; border-radius: 12px; text-align: center; color: white; margin: 2rem 0;">
+        <h2 style="margin: 0;">⚠️ No Data Available</h2>
+        <p style="margin: 0.5rem 0 0 0;">Please adjust your filters to view the dashboard</p>
+    </div>
+    ''', unsafe_allow_html=True)
     st.stop()
-
-# Metrics Summary
-col1, col2, col3, col4 = st.columns(4)
-col1.metric("🏙️ Cities Selected", len(selected_cities))
-col2.metric("📅 Years Analyzed", len(selected_years))
-col3.metric("📋 Total Records", len(filtered_df))
-col4.metric("🌡️ Avg Peak Temp", f"{filtered_df['Peak_Temp_C'].mean():.1f}°C")
-
-# Tabs
-tab1, tab2, tab3, tab4 = st.tabs([
-    "🌡️ Temperature Analysis",
-    "⚕️ Health Impact",
-    "🌾 Agricultural Impact",
-    "💧 Water & Climate Crisis"
-])
-
-with tab1:
-    st.subheader("🔥 Peak Temperature Comparison")
-    fig1 = px.bar(
-        filtered_df, x="City", y="Peak_Temp_C", color="Year",
-        barmode="group", title="Peak Temperature by City and Year"
-    )
-    st.plotly_chart(fig1, use_container_width=True)
-
-    st.subheader("⏱️ Heatwave Duration")
-    fig2 = px.bar(
-        filtered_df, x="City", y="Duration_Days", color="Year",
-        barmode="group", title="Heatwave Duration by City and Year"
-    )
-    st.plotly_chart(fig2, use_container_width=True)
-
-with tab2:
-    st.subheader("☠️ Heat-Related Deaths")
-    fig3 = px.bar(
-        filtered_df, x="City", y="Deaths", color="Year",
-        barmode="group", title="Deaths from Heatwaves"
-    )
-    st.plotly_chart(fig3, use_container_width=True)
-
-    st.subheader("🏥 Heatstroke Cases")
-    fig4 = px.bar(
-        filtered_df, x="City", y="Heatstroke_Cases", color="Year",
-        barmode="group", title="Heatstroke Cases Reported"
-    )
-    st.plotly_chart(fig4, use_container_width=True)
-
-with tab3:
-    st.subheader("🌾 Agricultural Loss (%)")
-    fig5 = px.bar(
-        filtered_df, x="City", y="Agriculture_Loss_pct", color="Year",
-        barmode="group", title="Agriculture Loss by City"
-    )
-    st.plotly_chart(fig5, use_container_width=True)
-
-    st.subheader("🐄 Livestock Loss Reports")
-    for _, row in filtered_df[filtered_df['Livestock_Loss'] != "No data available"].iterrows():
-        st.info(f"{row['City']} ({row['Year']}): {row['Livestock_Loss']}")
-
-with tab4:
-    st.subheader("💧 Water Shortage Impact")
-    for _, row in filtered_df[filtered_df['Water_Shortage_Impact'] != "No significant impact"].iterrows():
-        st.warning(f"{row['City']} ({row['Year']}): {row['Water_Shortage_Impact']}")
-
-# Downloadable Data
-with st.expander("📋 View & Download Filtered Data"):
-    st.dataframe(filtered_df)
-    csv = filtered_df.to_csv(index=False).encode()
-    st.download_button("📥 Download CSV", data=csv, file_name="filtered_heatwave_data.csv", mime="text/csv")
-
-# Footer
-st.markdown("""
-<hr>
-<p style='text-align: center; color: gray;'>📊 Pakistan Heatwave Dashboard • Built with Streamlit • 2025</p>
-""", unsafe_allow_html=True)
