@@ -4,30 +4,27 @@ import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-# 🎨 Page Configuration with Custom Theme
+# Page Configuration with Custom Theme
 
 st.set_page_config(
-page_title= "🔥 Pakistan Heatwave Dashboard  ",
-layout= "wide  ",
-initial_sidebar_state= "expanded  ",
-page_icon= "🌡️  "
+page_title=“Pakistan Heatwave Dashboard”,
+layout=“wide”,
+initial_sidebar_state=“expanded”,
+page_icon=“🌡️”
 )
 
-# 🎨 Custom CSS for Beautiful Styling
+# Custom CSS for Beautiful Styling
 
-st.markdown(  "  "  "
+st.markdown(’’’
 
 <style>
-    /* Import Google Fonts */
-    @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap");
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
     
-    /* Main App Styling */
     .main {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        font-family: "Poppins", sans-serif;
+        font-family: 'Poppins', sans-serif;
     }
     
-    /* Header Styling */
     .main-header {
         background: linear-gradient(90deg, #ff6b6b, #feca57, #48dbfb, #ff9ff3, #54a0ff);
         background-size: 300% 300%;
@@ -61,11 +58,6 @@ st.markdown(  "  "  "
         font-weight: 300;
     }
     
-    /* Sidebar Styling */
-    .css-1d391kg {
-        background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
-    }
-    
     .sidebar-header {
         background: linear-gradient(45deg, #ff6b6b, #feca57);
         padding: 1rem;
@@ -74,7 +66,6 @@ st.markdown(  "  "  "
         text-align: center;
     }
     
-    /* Metric Cards */
     .metric-card {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         padding: 1.5rem;
@@ -102,7 +93,6 @@ st.markdown(  "  "  "
         margin-top: 0.5rem;
     }
     
-    /* Tab Styling */
     .stTabs [data-baseweb="tab-list"] {
         gap: 8px;
         background: rgba(255,255,255,0.1);
@@ -126,7 +116,6 @@ st.markdown(  "  "  "
         box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     }
     
-    /* Charts Container */
     .chart-container {
         background: rgba(255,255,255,0.95);
         border-radius: 20px;
@@ -136,21 +125,12 @@ st.markdown(  "  "  "
         backdrop-filter: blur(10px);
     }
     
-    /* Warning/Info Boxes */
     .stAlert {
         border-radius: 15px;
         border: none;
         box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
     
-    /* Data Frame Styling */
-    .dataframe {
-        border-radius: 15px !important;
-        overflow: hidden;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    }
-    
-    /* Footer */
     .footer {
         background: linear-gradient(90deg, #2c3e50, #34495e);
         color: white;
@@ -161,21 +141,21 @@ st.markdown(  "  "  "
     }
 </style>
 
- "  "  ", unsafe_allow_html=True)
+‘’’, unsafe_allow_html=True)
 
 @st.cache_data
 def load_data():
 try:
-df = pd.read_csv( "pakistan_heatwave_data.csv  ")
-df[ "Year  "] = df[ "Year  "].astype(str)
-df[ "Deaths  "] = df[ "Deaths  "].fillna(0)
-df[ "Heatstroke_Cases  "] = df[ "Heatstroke_Cases  "].fillna(0)
-df[ "Agriculture_Loss_pct  "] = df[ "Agriculture_Loss_pct  "].fillna(0)
-df[ "Livestock_Loss  "] = df[ "Livestock_Loss  "].fillna( "No data available  ")
-df[ "Water_Shortage_Impact  "] = df[ "Water_Shortage_Impact  "].fillna( "No significant impact  ")
+df = pd.read_csv(“pakistan_heatwave_data.csv”)
+df[‘Year’] = df[‘Year’].astype(str)
+df[‘Deaths’] = df[‘Deaths’].fillna(0)
+df[‘Heatstroke_Cases’] = df[‘Heatstroke_Cases’].fillna(0)
+df[‘Agriculture_Loss_pct’] = df[‘Agriculture_Loss_pct’].fillna(0)
+df[‘Livestock_Loss’] = df[‘Livestock_Loss’].fillna(“No data available”)
+df[‘Water_Shortage_Impact’] = df[‘Water_Shortage_Impact’].fillna(“No significant impact”)
 return df
 except FileNotFoundError:
-st.error( "🚨 CSV file not found. Please make sure "pakistan_heatwave_data.csv" is in the same directory.  ")
+st.error(“CSV file not found. Please make sure ‘pakistan_heatwave_data.csv’ is in the same directory.”)
 return pd.DataFrame()
 
 df = load_data()
@@ -183,106 +163,106 @@ df = load_data()
 if df.empty:
 st.stop()
 
-# 🎨 Beautiful Header
+# Beautiful Header
 
-st.markdown(  "  "  "
+st.markdown(’’’
 
 <div class="main-header">
     <h1 class="main-title">🔥 Pakistan Heatwave Analytics</h1>
     <p class="main-subtitle">Advanced Climate Impact Dashboard • Real-time Data Insights</p>
 </div>
-""", unsafe_allow_html=True)
+''', unsafe_allow_html=True)
 
-# 🎨 Enhanced Sidebar
+# Enhanced Sidebar
 
-st.sidebar.markdown(  "  "  "
+st.sidebar.markdown(’’’
 
 <div class="sidebar-header">
     <h2 style="color: white; margin: 0; font-size: 1.5rem;">🔍 Smart Filters</h2>
 </div>
-""", unsafe_allow_html=True)
+''', unsafe_allow_html=True)
 
-cities = sorted(df[ "City  "].dropna().unique().tolist())
+cities = sorted(df[‘City’].dropna().unique().tolist())
 selected_cities = st.sidebar.multiselect(
- "🏙️ Select Cities to Compare  ",
+“🏙️ Select Cities to Compare”,
 cities,
 default=[cities[0]] if cities else [],
-help= "Choose one or more cities for comparison  "
+help=“Choose one or more cities for comparison”
 )
 
-years = sorted(df[ "Year  "].dropna().unique().tolist())
+years = sorted(df[‘Year’].dropna().unique().tolist())
 selected_years = st.sidebar.multiselect(
- "📅 Select Years to Compare  ",
+“📅 Select Years to Compare”,
 years,
 default=years[-2:] if len(years) >= 2 else years,
-help= "Select years for temporal analysis  "
+help=“Select years for temporal analysis”
 )
 
 # Filter data
 
 if selected_cities and selected_years:
-filtered_df = df[(df[ "City  "].isin(selected_cities)) & (df[ "Year  "].isin(selected_years))]
+filtered_df = df[(df[“City”].isin(selected_cities)) & (df[“Year”].isin(selected_years))]
 else:
 filtered_df = pd.DataFrame()
 
 if filtered_df.empty:
-st.markdown(  "  "  "
+st.markdown(’’’
 <div style="background: linear-gradient(45deg, #ff6b6b, #feca57); padding: 2rem; border-radius: 15px; text-align: center; color: white;">
 <h2>⚠️ No Data Available</h2>
 <p>Please adjust your filters to view the dashboard</p>
 </div>
- "  "  ", unsafe_allow_html=True)
+‘’’, unsafe_allow_html=True)
 st.stop()
 
-# 🎨 Enhanced Metrics with Beautiful Cards
+# Enhanced Metrics with Beautiful Cards
 
-st.markdown(  "### 📊 Dashboard Overview  ")
+st.markdown(”### 📊 Dashboard Overview”)
 col1, col2, col3, col4 = st.columns(4)
 
 with col1:
-st.markdown(f  "  "  "
+st.markdown(f’’’
 <div class="metric-card">
 <div class="metric-value">{len(selected_cities)}</div>
 <div class="metric-label">🏙️ Cities Selected</div>
 </div>
- "  "  ", unsafe_allow_html=True)
+‘’’, unsafe_allow_html=True)
 
 with col2:
-st.markdown(f  "  "  "
+st.markdown(f’’’
 <div class="metric-card">
 <div class="metric-value">{len(selected_years)}</div>
 <div class="metric-label">📅 Years Analyzed</div>
 </div>
- "  "  ", unsafe_allow_html=True)
+‘’’, unsafe_allow_html=True)
 
 with col3:
-st.markdown(f  "  "  "
+st.markdown(f’’’
 <div class="metric-card">
 <div class="metric-value">{len(filtered_df)}</div>
 <div class="metric-label">📋 Total Records</div>
 </div>
- "  "  ", unsafe_allow_html=True)
+‘’’, unsafe_allow_html=True)
 
 with col4:
-avg_temp = filtered_df[ "Peak_Temp_C  "].mean()
-st.markdown(f  "  "  "
+avg_temp = filtered_df[‘Peak_Temp_C’].mean()
+st.markdown(f’’’
 <div class="metric-card">
 <div class="metric-value">{avg_temp:.1f}°C</div>
 <div class="metric-label">🌡️ Avg Peak Temp</div>
 </div>
- "  "  ", unsafe_allow_html=True)
+‘’’, unsafe_allow_html=True)
 
-# 🎨 Enhanced Tabs with Beautiful Content
+# Enhanced Tabs with Beautiful Content
 
 tab1, tab2, tab3, tab4 = st.tabs([
- "🌡️ Temperature Analysis  ",
- "⚕️ Health Impact  ",
- "🌾 Agricultural Impact  ",
- "💧 Water & Climate Crisis  "
+“🌡️ Temperature Analysis”,
+“⚕️ Health Impact”,
+“🌾 Agricultural Impact”,
+“💧 Water & Climate Crisis”
 ])
 
 with tab1:
-st.markdown(  "<div class="chart-container">  ", unsafe_allow_html=True)
+st.markdown(’<div class="chart-container">’, unsafe_allow_html=True)
 
 ```
 col1, col2 = st.columns(2)
@@ -290,20 +270,20 @@ col1, col2 = st.columns(2)
 with col1:
     st.markdown("#### 🔥 Peak Temperature Comparison")
     fig1 = px.bar(
-        filtered_df, x="City", y="Peak_Temp_C", color="Year",
-        barmode="group", 
-        color_discrete_sequence=["#ff6b6b", "#feca57", "#48dbfb", "#ff9ff3", "#54a0ff"],
-        labels={"Peak_Temp_C": "Peak Temperature (°C)"},
+        filtered_df, x='City', y='Peak_Temp_C', color='Year',
+        barmode='group', 
+        color_discrete_sequence=['#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3', '#54a0ff'],
+        labels={'Peak_Temp_C': 'Peak Temperature (°C)'},
         title="Peak Temperature by City and Year"
     )
     fig1.update_traces(
         hovertemplate="<b>%{x}</b><br>🌡️ Temp: %{y}°C<br>📅 Year: %{customdata[0]}<extra></extra>", 
-        customdata=filtered_df[["Year"]]
+        customdata=filtered_df[['Year']]
     )
     fig1.update_layout(
         height=400, 
-        plot_bgcolor="rgba(0,0,0,0)",
-        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
         font=dict(family="Poppins", size=12),
         title_font_size=16,
         showlegend=True
@@ -313,20 +293,20 @@ with col1:
 with col2:
     st.markdown("#### ⏱️ Heatwave Duration")
     fig2 = px.bar(
-        filtered_df, x="City", y="Duration_Days", color="Year",
-        barmode="group", 
-        color_discrete_sequence=["#a55eea", "#26de81", "#fd79a8", "#fdcb6e", "#6c5ce7"],
-        labels={"Duration_Days": "Duration (Days)"},
+        filtered_df, x='City', y='Duration_Days', color='Year',
+        barmode='group', 
+        color_discrete_sequence=['#a55eea', '#26de81', '#fd79a8', '#fdcb6e', '#6c5ce7'],
+        labels={'Duration_Days': 'Duration (Days)'},
         title="Heatwave Duration by City and Year"
     )
     fig2.update_traces(
         hovertemplate="<b>%{x}</b><br>⏱️ Duration: %{y} Days<br>📅 Year: %{customdata[0]}<extra></extra>", 
-        customdata=filtered_df[["Year"]]
+        customdata=filtered_df[['Year']]
     )
     fig2.update_layout(
         height=400, 
-        plot_bgcolor="rgba(0,0,0,0)",
-        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
         font=dict(family="Poppins", size=12),
         title_font_size=16
     )
@@ -336,18 +316,18 @@ with col2:
 st.markdown("#### 🌍 Advanced Temperature Analysis")
 if len(filtered_df) > 3:
     fig_3d = go.Figure(data=[go.Scatter3d(
-        x=filtered_df["City"],
-        y=filtered_df["Year"],
-        z=filtered_df["Peak_Temp_C"],
-        mode="markers+lines",
+        x=filtered_df['City'],
+        y=filtered_df['Year'],
+        z=filtered_df['Peak_Temp_C'],
+        mode='markers+lines',
         marker=dict(
-            size=filtered_df["Duration_Days"]/2,
-            color=filtered_df["Peak_Temp_C"],
-            colorscale="Plasma",
+            size=filtered_df['Duration_Days']/2,
+            color=filtered_df['Peak_Temp_C'],
+            colorscale='Plasma',
             showscale=True,
             colorbar=dict(title="Temperature (°C)")
         ),
-        line=dict(color="darkblue", width=2),
+        line=dict(color='darkblue', width=2),
         hovertemplate="<b>%{x}</b><br>Year: %{y}<br>Peak Temp: %{z}°C<extra></extra>"
     )])
     
@@ -364,11 +344,11 @@ if len(filtered_df) > 3:
     )
     st.plotly_chart(fig_3d, use_container_width=True)
 
-st.markdown("</div>", unsafe_allow_html=True)
+st.markdown('</div>', unsafe_allow_html=True)
 ```
 
 with tab2:
-st.markdown(  "<div class="chart-container">  ", unsafe_allow_html=True)
+st.markdown(’<div class="chart-container">’, unsafe_allow_html=True)
 
 ```
 col1, col2 = st.columns(2)
@@ -376,19 +356,19 @@ col1, col2 = st.columns(2)
 with col1:
     st.markdown("#### ☠️ Heat-Related Deaths")
     fig3 = px.bar(
-        filtered_df, x="City", y="Deaths", color="Year",
-        barmode="group", 
-        color_discrete_sequence=["#ff6b6b", "#ff7675", "#fd79a8", "#fdcb6e"],
+        filtered_df, x='City', y='Deaths', color='Year',
+        barmode='group', 
+        color_discrete_sequence=['#ff6b6b', '#ff7675', '#fd79a8', '#fdcb6e'],
         title="Deaths from Heatwaves"
     )
     fig3.update_traces(
         hovertemplate="<b>%{x}</b><br>☠️ Deaths: %{y}<br>📅 Year: %{customdata[0]}<extra></extra>", 
-        customdata=filtered_df[["Year"]]
+        customdata=filtered_df[['Year']]
     )
     fig3.update_layout(
         height=400, 
-        plot_bgcolor="rgba(0,0,0,0)",
-        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
         font=dict(family="Poppins")
     )
     st.plotly_chart(fig3, use_container_width=True)
@@ -396,19 +376,19 @@ with col1:
 with col2:
     st.markdown("#### 🏥 Heatstroke Cases")
     fig4 = px.bar(
-        filtered_df, x="City", y="Heatstroke_Cases", color="Year",
-        barmode="group", 
-        color_discrete_sequence=["#fd79a8", "#fdcb6e", "#e17055", "#a29bfe"],
+        filtered_df, x='City', y='Heatstroke_Cases', color='Year',
+        barmode='group', 
+        color_discrete_sequence=['#fd79a8', '#fdcb6e', '#e17055', '#a29bfe'],
         title="Heatstroke Cases Reported"
     )
     fig4.update_traces(
         hovertemplate="<b>%{x}</b><br>🏥 Cases: %{y}<br>📅 Year: %{customdata[0]}<extra></extra>", 
-        customdata=filtered_df[["Year"]]
+        customdata=filtered_df[['Year']]
     )
     fig4.update_layout(
         height=400, 
-        plot_bgcolor="rgba(0,0,0,0)",
-        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
         font=dict(family="Poppins")
     )
     st.plotly_chart(fig4, use_container_width=True)
@@ -417,54 +397,54 @@ with col2:
 st.markdown("#### 📊 Combined Health Impact Analysis")
 fig_combined = make_subplots(
     rows=1, cols=2,
-    subplot_titles=("Deaths vs Temperature", "Heatstroke Cases vs Duration"),
+    subplot_titles=('Deaths vs Temperature', 'Heatstroke Cases vs Duration'),
     specs=[[{"secondary_y": False}, {"secondary_y": False}]]
 )
 
 fig_combined.add_trace(
-    go.Scatter(x=filtered_df["Peak_Temp_C"], y=filtered_df["Deaths"],
-              mode="markers", name="Deaths vs Temp",
-              marker=dict(size=10, color="red", opacity=0.7)),
+    go.Scatter(x=filtered_df['Peak_Temp_C'], y=filtered_df['Deaths'],
+              mode='markers', name='Deaths vs Temp',
+              marker=dict(size=10, color='red', opacity=0.7)),
     row=1, col=1
 )
 
 fig_combined.add_trace(
-    go.Scatter(x=filtered_df["Duration_Days"], y=filtered_df["Heatstroke_Cases"],
-              mode="markers", name="Cases vs Duration",
-              marker=dict(size=10, color="orange", opacity=0.7)),
+    go.Scatter(x=filtered_df['Duration_Days'], y=filtered_df['Heatstroke_Cases'],
+              mode='markers', name='Cases vs Duration',
+              marker=dict(size=10, color='orange', opacity=0.7)),
     row=1, col=2
 )
 
 fig_combined.update_layout(
     height=400,
     font=dict(family="Poppins"),
-    plot_bgcolor="rgba(0,0,0,0)",
-    paper_bgcolor="rgba(0,0,0,0)"
+    plot_bgcolor='rgba(0,0,0,0)',
+    paper_bgcolor='rgba(0,0,0,0)'
 )
 st.plotly_chart(fig_combined, use_container_width=True)
 
 # Health Summary Table
 st.markdown("#### 📋 Health Impact Summary")
-health_summary = filtered_df.groupby(["City", "Year"]).agg({
-    "Deaths": "sum",
-    "Heatstroke_Cases": "sum",
-    "Peak_Temp_C": "max"
+health_summary = filtered_df.groupby(['City', 'Year']).agg({
+    'Deaths': 'sum',
+    'Heatstroke_Cases': 'sum',
+    'Peak_Temp_C': 'max'
 }).reset_index()
 
 # Style the dataframe
 st.dataframe(
-    health_summary.style.background_gradient(cmap="Reds", subset=["Deaths"])
-                       .background_gradient(cmap="Oranges", subset=["Heatstroke_Cases"])
-                       .background_gradient(cmap="YlOrRd", subset=["Peak_Temp_C"])
-                       .format({"Peak_Temp_C": "{:.1f}°C"}),
+    health_summary.style.background_gradient(cmap='Reds', subset=['Deaths'])
+                       .background_gradient(cmap='Oranges', subset=['Heatstroke_Cases'])
+                       .background_gradient(cmap='YlOrRd', subset=['Peak_Temp_C'])
+                       .format({'Peak_Temp_C': '{:.1f}°C'}),
     use_container_width=True
 )
 
-st.markdown("</div>", unsafe_allow_html=True)
+st.markdown('</div>', unsafe_allow_html=True)
 ```
 
 with tab3:
-st.markdown(  "<div class="chart-container">  ", unsafe_allow_html=True)
+st.markdown(’<div class="chart-container">’, unsafe_allow_html=True)
 
 ```
 st.markdown("#### 🌾 Agricultural Impact Analysis")
@@ -473,108 +453,108 @@ col1, col2 = st.columns(2)
 
 with col1:
     fig5 = px.bar(
-        filtered_df, x="City", y="Agriculture_Loss_pct", color="Year",
-        barmode="group", 
-        color_discrete_sequence=["#00b894", "#00cec9", "#6c5ce7", "#a29bfe"],
-        labels={"Agriculture_Loss_pct": "Agriculture Loss (%)"},
+        filtered_df, x='City', y='Agriculture_Loss_pct', color='Year',
+        barmode='group', 
+        color_discrete_sequence=['#00b894', '#00cec9', '#6c5ce7', '#a29bfe'],
+        labels={'Agriculture_Loss_pct': 'Agriculture Loss (%)'},
         title="Agricultural Losses by City and Year"
     )
     fig5.update_layout(
         height=400, 
-        plot_bgcolor="rgba(0,0,0,0)",
-        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
         font=dict(family="Poppins")
     )
     st.plotly_chart(fig5, use_container_width=True)
 
 with col2:
     # Pie chart for total losses by city
-    city_losses = filtered_df.groupby("City")["Agriculture_Loss_pct"].sum().reset_index()
+    city_losses = filtered_df.groupby('City')['Agriculture_Loss_pct'].sum().reset_index()
     fig_pie = px.pie(
-        city_losses, values="Agriculture_Loss_pct", names="City",
+        city_losses, values='Agriculture_Loss_pct', names='City',
         title="Total Agricultural Losses by City",
-        color_discrete_sequence=["#ff6b6b", "#feca57", "#48dbfb", "#ff9ff3", "#54a0ff"]
+        color_discrete_sequence=['#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3', '#54a0ff']
     )
     fig_pie.update_layout(
         height=400,
         font=dict(family="Poppins"),
-        plot_bgcolor="rgba(0,0,0,0)",
-        paper_bgcolor="rgba(0,0,0,0)"
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)'
     )
     st.plotly_chart(fig_pie, use_container_width=True)
 
 st.markdown("#### 🐄 Livestock Impact Reports")
-livestock_data = filtered_df[filtered_df["Livestock_Loss"] != "No data available"]
+livestock_data = filtered_df[filtered_df['Livestock_Loss'] != "No data available"]
 if not livestock_data.empty:
     for _, row in livestock_data.iterrows():
-        st.markdown(f"""
+        st.markdown(f'''
         <div style="background: linear-gradient(45deg, #fd79a8, #fdcb6e); padding: 1rem; border-radius: 10px; margin: 0.5rem 0; color: white;">
             <strong>🏙️ {row["City"]} ({row["Year"]})</strong><br>
             🐄 {row["Livestock_Loss"]}
         </div>
-        """, unsafe_allow_html=True)
+        ''', unsafe_allow_html=True)
 else:
     st.info("📊 No significant livestock impact data available for selected filters.")
 
-st.markdown("</div>", unsafe_allow_html=True)
+st.markdown('</div>', unsafe_allow_html=True)
 ```
 
 with tab4:
-st.markdown(  "<div class="chart-container">  ", unsafe_allow_html=True)
+st.markdown(’<div class="chart-container">’, unsafe_allow_html=True)
 
 ```
 st.markdown("#### 💧 Water Crisis Impact")
-water_data = filtered_df[filtered_df["Water_Shortage_Impact"] != "No significant impact"]
+water_data = filtered_df[filtered_df['Water_Shortage_Impact'] != "No significant impact"]
 if not water_data.empty:
     for _, row in water_data.iterrows():
-        st.markdown(f"""
+        st.markdown(f'''
         <div style="background: linear-gradient(45deg, #48dbfb, #0984e3); padding: 1rem; border-radius: 10px; margin: 0.5rem 0; color: white;">
             <strong>🏙️ {row["City"]} ({row["Year"]})</strong><br>
             💧 {row["Water_Shortage_Impact"]}
         </div>
-        """, unsafe_allow_html=True)
+        ''', unsafe_allow_html=True)
 else:
     st.info("📊 No significant water shortage impacts reported for selected filters.")
 
 st.markdown("#### 🔥 Temperature vs Duration Analysis")
 fig6 = px.scatter(
     filtered_df,
-    x="Peak_Temp_C",
-    y="Duration_Days",
-    size="Deaths",
-    color="City",
-    hover_name="City",
-    hover_data=["Year", "Heatstroke_Cases"],
+    x='Peak_Temp_C',
+    y='Duration_Days',
+    size='Deaths',
+    color='City',
+    hover_name='City',
+    hover_data=['Year', 'Heatstroke_Cases'],
     title="Peak Temperature vs Duration (Bubble Size = Deaths)",
-    color_discrete_sequence=["#ff6b6b", "#feca57", "#48dbfb", "#ff9ff3", "#54a0ff"]
+    color_discrete_sequence=['#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3', '#54a0ff']
 )
 fig6.update_layout(
     height=500, 
-    plot_bgcolor="rgba(0,0,0,0)",
-    paper_bgcolor="rgba(0,0,0,0)",
+    plot_bgcolor='rgba(0,0,0,0)',
+    paper_bgcolor='rgba(0,0,0,0)',
     font=dict(family="Poppins")
 )
 fig6.update_traces(
-    marker=dict(opacity=0.8, line=dict(width=2, color="white")),
+    marker=dict(opacity=0.8, line=dict(width=2, color='white')),
     hovertemplate="<b>%{hovertext}</b><br>🌡️ Peak Temp: %{x}°C<br>⏱️ Duration: %{y} days<br>📅 Year: %{customdata[0]}<br>🏥 Heatstroke Cases: %{customdata[1]}<extra></extra>"
 )
 st.plotly_chart(fig6, use_container_width=True)
 
-st.markdown("</div>", unsafe_allow_html=True)
+st.markdown('</div>', unsafe_allow_html=True)
 ```
 
-# 🎨 Enhanced Raw Data Section
+# Enhanced Raw Data Section
 
-with st.expander( "📋 View & Download Raw Data  ", expanded=False):
+with st.expander(“📋 View & Download Raw Data”, expanded=False):
 if not filtered_df.empty:
-st.markdown(  "#### 📊 Filtered Dataset  ")
+st.markdown(”#### 📊 Filtered Dataset”)
 
 ```
     # Enhanced dataframe with styling
-    styled_df = filtered_df.style.background_gradient(cmap="coolwarm", subset=["Peak_Temp_C", "Duration_Days"])\
-                                .background_gradient(cmap="Reds", subset=["Deaths", "Heatstroke_Cases"])\
-                                .background_gradient(cmap="Greens", subset=["Agriculture_Loss_pct"])\
-                                .format({"Peak_Temp_C": "{:.1f}°C", "Agriculture_Loss_pct": "{:.1f}%"})
+    styled_df = filtered_df.style.background_gradient(cmap='coolwarm', subset=['Peak_Temp_C', 'Duration_Days'])\
+                                .background_gradient(cmap='Reds', subset=['Deaths', 'Heatstroke_Cases'])\
+                                .background_gradient(cmap='Greens', subset=['Agriculture_Loss_pct'])\
+                                .format({'Peak_Temp_C': '{:.1f}°C', 'Agriculture_Loss_pct': '{:.1f}%'})
     
     st.dataframe(styled_df, use_container_width=True)
     
@@ -590,18 +570,18 @@ else:
     st.info("🔍 No data to display. Please select cities and years from the sidebar.")
 ```
 
-# 🎨 Enhanced Summary Statistics
+# Enhanced Summary Statistics
 
 if not filtered_df.empty:
-st.markdown(  "### 📈 Key Insights & Statistics  ")
+st.markdown(”### 📈 Key Insights & Statistics”)
 
 ```
 col1, col2, col3, col4 = st.columns(4)
 
 with col1:
-    hottest_temp = filtered_df["Peak_Temp_C"].max()
-    hottest = filtered_df.loc[filtered_df["Peak_Temp_C"].idxmax()]
-    st.markdown(f"""
+    hottest_temp = filtered_df['Peak_Temp_C'].max()
+    hottest = filtered_df.loc[filtered_df['Peak_Temp_C'].idxmax()]
+    st.markdown(f'''
     <div class="metric-card" style="background: linear-gradient(45deg, #ff6b6b, #ff7675);">
         <div class="metric-value">{hottest_temp:.1f}°C</div>
         <div class="metric-label">🔥 Highest Temperature</div>
@@ -609,11 +589,11 @@ with col1:
             📍 {hottest["City"]} ({hottest["Year"]})
         </div>
     </div>
-    """, unsafe_allow_html=True)
+    ''', unsafe_allow_html=True)
 
 with col2:
-    total_deaths = int(filtered_df["Deaths"].sum())
-    st.markdown(f"""
+    total_deaths = int(filtered_df['Deaths'].sum())
+    st.markdown(f'''
     <div class="metric-card" style="background: linear-gradient(45deg, #fd79a8, #fdcb6e);">
         <div class="metric-value">{total_deaths}</div>
         <div class="metric-label">☠️ Total Deaths</div>
@@ -621,11 +601,11 @@ with col2:
             Across selected data
         </div>
     </div>
-    """, unsafe_allow_html=True)
+    ''', unsafe_allow_html=True)
 
 with col3:
-    total_cases = int(filtered_df["Heatstroke_Cases"].sum())
-    st.markdown(f"""
+    total_cases = int(filtered_df['Heatstroke_Cases'].sum())
+    st.markdown(f'''
     <div class="metric-card" style="background: linear-gradient(45deg, #a55eea, #3742fa);">
         <div class="metric-value">{total_cases}</div>
         <div class="metric-label">🏥 Heatstroke Cases</div>
@@ -633,12 +613,12 @@ with col3:
             Total reported cases
         </div>
     </div>
-    """, unsafe_allow_html=True)
+    ''', unsafe_allow_html=True)
 
 with col4:
-    longest_duration = filtered_df["Duration_Days"].max()
-    longest = filtered_df.loc[filtered_df["Duration_Days"].idxmax()]
-    st.markdown(f"""
+    longest_duration = filtered_df['Duration_Days'].max()
+    longest = filtered_df.loc[filtered_df['Duration_Days'].idxmax()]
+    st.markdown(f'''
     <div class="metric-card" style="background: linear-gradient(45deg, #26de81, #20bf6b);">
         <div class="metric-value">{longest_duration}</div>
         <div class="metric-label">⏱️ Longest Heatwave</div>
@@ -646,12 +626,12 @@ with col4:
             📍 {longest["City"]} ({longest["Year"]})
         </div>
     </div>
-    """, unsafe_allow_html=True)
+    ''', unsafe_allow_html=True)
 ```
 
-# 🎨 Beautiful Footer
+# Beautiful Footer
 
-st.markdown(  "  "  "
+st.markdown(’’’
 
 <div class="footer">
     <h3 style="margin: 0; color: #ecf0f1;">📊 Pakistan Heatwave Analytics Dashboard</h3>
@@ -671,4 +651,4 @@ st.markdown(  "  "  "
         Last Updated: 2025 • Real-time Climate Monitoring System
     </p>
 </div>
-""", unsafe_allow_html=True)
+''', unsafe_allow_html=True)
