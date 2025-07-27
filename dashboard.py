@@ -55,6 +55,7 @@ st.markdown('''
 </style>
 ''', unsafe_allow_html=True)
 
+# 🧠 Load and preprocess data
 @st.cache_data
 def load_data():
     df = pd.read_csv("pakistan_heatwave_data.csv")
@@ -67,3 +68,79 @@ def load_data():
     return df
 
 df = load_data()
+
+# 🌐 Header Section
+st.markdown('''
+<div class="main-header">
+    <h1 class="main-title">🔥 Pakistan Heatwave Analytics</h1>
+    <p class="main-subtitle">Advanced Climate Impact Dashboard • Real-time Data Insights</p>
+</div>
+''', unsafe_allow_html=True)
+
+# 📊 Sidebar Filters
+st.sidebar.markdown('''
+<div class="sidebar-header">🔍 Smart Filters</div>
+''', unsafe_allow_html=True)
+
+cities = sorted(df['City'].dropna().unique().tolist())
+selected_cities = st.sidebar.multiselect("🏙️ Select Cities to Compare", cities, default=[cities[0]])
+
+years = sorted(df['Year'].dropna().unique().tolist())
+selected_years = st.sidebar.multiselect("📅 Select Years to Compare", years, default=[years[-1]])
+
+# ✅ Filter data
+filtered_df = df[df['City'].isin(selected_cities) & df['Year'].isin(selected_years)]
+
+if filtered_df.empty:
+    st.warning("⚠️ No data found for the selected filters. Try different cities or years.")
+    st.stop()
+
+# 📊 Metric Cards
+col1, col2, col3, col4 = st.columns(4)
+
+with col1:
+    st.markdown(f'''
+    <div class="metric-card">
+        <div class="metric-value">{len(selected_cities)}</div>
+        <div class="metric-label">🏙️ Cities Selected</div>
+    </div>
+    ''', unsafe_allow_html=True)
+
+with col2:
+    st.markdown(f'''
+    <div class="metric-card">
+        <div class="metric-value">{len(selected_years)}</div>
+        <div class="metric-label">📅 Years Analyzed</div>
+    </div>
+    ''', unsafe_allow_html=True)
+
+with col3:
+    st.markdown(f'''
+    <div class="metric-card">
+        <div class="metric-value">{len(filtered_df)}</div>
+        <div class="metric-label">📋 Total Records</div>
+    </div>
+    ''', unsafe_allow_html=True)
+
+with col4:
+    avg_temp = filtered_df['Peak_Temp_C'].mean()
+    st.markdown(f'''
+    <div class="metric-card">
+        <div class="metric-value">{avg_temp:.1f}°C</div>
+        <div class="metric-label">🌡️ Avg Peak Temp</div>
+    </div>
+    ''', unsafe_allow_html=True)
+
+# 📈 Example Chart – Deaths by Year per City
+st.subheader("🧍‍♂️ Heatwave Deaths by Year and City")
+fig = px.bar(
+    filtered_df,
+    x="Year",
+    y="Deaths",
+    color="City",
+    barmode="group",
+    text_auto=True,
+    labels={"Deaths": "Number of Deaths"},
+    height=500
+)
+st.plotly_chart(fig, use_container_width=True)
