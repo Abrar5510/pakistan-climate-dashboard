@@ -2,79 +2,81 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-# 🌡️ Page Configuration
-st.set_page_config(page_title="🔥 Pakistan Heatwave Dashboard", layout="wide", page_icon="🌡️")
+# Page Configuration
+st.set_page_config(
+    page_title="🔥 Pakistan Heatwave Dashboard",
+    layout="wide",
+    initial_sidebar_state="expanded",
+    page_icon="🌡️"
+)
 
-# 🎨 Custom CSS
+# Custom CSS
 st.markdown("""
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-
-    html, body, [class*="css"] {
-        font-family: 'Inter', sans-serif;
-    }
-
-    .main-header {
-        background-color: #1e293b;
-        padding: 2rem;
-        border-radius: 12px;
-        margin-bottom: 2rem;
-        color: white;
-        text-align: center;
-    }
-
-    .main-header h1 {
-        font-size: 2.8rem;
-        margin: 0;
-    }
-
-    .main-header p {
-        font-size: 1.1rem;
-        color: #cbd5e1;
-        margin-top: 0.5rem;
-    }
-
-    .chart-container {
-        background: white;
-        padding: 1.5rem;
-        border-radius: 10px;
-        box-shadow: 0 3px 12px rgba(0,0,0,0.05);
-        margin-bottom: 2rem;
-    }
-</style>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+        html, body, [class*="css"] {
+            font-family: 'Orbitron', sans-serif;
+            background-color: #0d1117;
+            color: white;
+        }
+        .chart-container {
+            background-color: #161b22;
+            padding: 1.5em;
+            margin: 1em 0;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+        }
+        .metric-container {
+            background-color: #1f2937;
+            padding: 1em;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .stTabs [data-baseweb="tab-list"] {
+            background-color: #1f2937;
+            border-radius: 8px;
+        }
+        .stTabs [data-baseweb="tab"] {
+            color: white;
+        }
+        footer {
+            text-align: center;
+            margin-top: 3em;
+            color: #888;
+            font-size: 0.9em;
+        }
+    </style>
 """, unsafe_allow_html=True)
 
-# 📊 Main Header
-st.markdown("""
-<div class="main-header">
-    <h1>🔥 Pakistan Heatwave Dashboard</h1>
-    <p>Analyzing temperature, health, agriculture & water crisis (2022–2025)</p>
-</div>
-""", unsafe_allow_html=True)
+# Load Data
+@st.cache_data
+def load_data():
+    return pd.read_csv("/mnt/data/heatwave_pakistan.csv")
 
-# 📂 Load Dataset
-df = pd.read_csv("pakistan_heatwave_data.csv")
+df = load_data()
 
-# 📅 Sidebar Filters
-st.sidebar.header("📍 Filter Data")
-years = sorted(df['Year'].unique())
-cities = sorted(df['City'].unique())
+# Sidebar Filters
+st.sidebar.header("🔍 Filter Data")
+selected_city = st.sidebar.multiselect("Select Cities", options=df["City"].unique(), default=list(df["City"].unique()))
+selected_year = st.sidebar.multiselect("Select Years", options=df["Year"].unique(), default=list(df["Year"].unique()))
+filtered_df = df[(df["City"].isin(selected_city)) & (df["Year"].isin(selected_year))]
 
-selected_years = st.sidebar.multiselect("Select Years", years, default=years)
-selected_cities = st.sidebar.multiselect("Select Cities", cities, default=cities)
+# Tabs
+tab1, tab2, tab3, tab4 = st.tabs(["🌡️ Temperature", "🩺 Health", "🌾 Agriculture", "💧 Water Crisis"])
 
-filtered_df = df[(df['Year'].isin(selected_years)) & (df['City'].isin(selected_cities))]
-
-# 🧭 Tabs
-tab1, tab2, tab3, tab4 = st.tabs(["🌡️ Temperature", "⚕️ Health Impact", "🌾 Agriculture", "💧 Water Crisis"])
-
-# 🌡️ Tab 1: Temperature
 with tab1:
     st.markdown('<div class="chart-container">', unsafe_allow_html=True)
-
-    fig_temp = px.line(filtered_df, x='Year', y='Peak_Temp_C', color='City', markers=True,
-                       title="Peak Temperature (°C) Over Years")
+    st.subheader("🌡️ Temperature Trends")
+    fig_temp = px.bar(
+        filtered_df,
+        x='Year',
+        y='Peak_Temp_C',
+        color='City',
+        barmode='group',
+        title="Peak Temperature (°C) Over Years"
+    )
     st.plotly_chart(fig_temp, use_container_width=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
     st.subheader("📈 Temperature Summary")
     col1, col2 = st.columns(2)
@@ -86,38 +88,45 @@ with tab1:
     with col2:
         st.metric("Average Peak Temperature", f"{filtered_df['Peak_Temp_C'].mean():.1f}°C")
 
-    st.markdown('</div>', unsafe_allow_html=True)
-
-# ⚕️ Tab 2: Health
 with tab2:
     st.markdown('<div class="chart-container">', unsafe_allow_html=True)
-
-    fig_deaths = px.bar(filtered_df, x='City', y='Deaths', color='Year', barmode='group',
-                        title="Heatwave-Related Deaths by City")
-    st.plotly_chart(fig_deaths, use_container_width=True)
+    st.subheader("🩺 Health Impact")
+    fig_health = px.bar(
+        filtered_df,
+        x='City',
+        y=['Deaths', 'Heatstroke_Cases'],
+        barmode='group',
+        title="Health Impact by City"
+    )
+    st.plotly_chart(fig_health, use_container_width=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
     st.subheader("🩺 Health Impact Summary")
     col1, col2 = st.columns(2)
     with col1:
         total_deaths = int(filtered_df['Deaths'].sum())
-        deadliest = filtered_df.loc[filtered_df['Deaths'].idxmax()]
         st.metric("Total Deaths", total_deaths)
+        deadliest = filtered_df.loc[filtered_df['Deaths'].idxmax()]
         st.caption(f"Most in {deadliest['City']} ({deadliest['Year']})")
     with col2:
         total_cases = int(filtered_df['Heatstroke_Cases'].sum())
-        worst_case = filtered_df.loc[filtered_df['Heatstroke_Cases'].idxmax()]
         st.metric("Heatstroke Cases", total_cases)
+        worst_case = filtered_df.loc[filtered_df['Heatstroke_Cases'].idxmax()]
         st.caption(f"Most in {worst_case['City']} ({worst_case['Year']})")
 
-    st.markdown('</div>', unsafe_allow_html=True)
-
-# 🌾 Tab 3: Agriculture
 with tab3:
     st.markdown('<div class="chart-container">', unsafe_allow_html=True)
-
-    fig_agri = px.bar(filtered_df, x='City', y='Agriculture_Loss_pct', color='Year',
-                      title="Agriculture Loss (%) by City")
+    st.subheader("🌾 Agricultural Loss")
+    fig_agri = px.bar(
+        filtered_df,
+        x='City',
+        y='Agriculture_Loss_pct',
+        color='Year',
+        barmode='group',
+        title="Agricultural Loss (%) by City and Year"
+    )
     st.plotly_chart(fig_agri, use_container_width=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
     st.subheader("🌾 Agriculture Summary")
     col1, col2 = st.columns(2)
@@ -129,19 +138,19 @@ with tab3:
     with col2:
         st.metric("Average Loss", f"{filtered_df['Agriculture_Loss_pct'].mean():.1f}%")
 
-    st.markdown('</div>', unsafe_allow_html=True)
-
-# 💧 Tab 4: Water Crisis
 with tab4:
     st.markdown('<div class="chart-container">', unsafe_allow_html=True)
-
-    fig_duration = px.line(filtered_df, x='Year', y='Duration_Days', color='City', markers=True,
-                           title="Heatwave Duration (Days) Over Years")
+    st.subheader("💧 Heatwave Duration & Water Shortage")
+    fig_duration = px.bar(
+        filtered_df,
+        x='Year',
+        y='Duration_Days',
+        color='City',
+        barmode='group',
+        title="Heatwave Duration (Days) Over Years"
+    )
     st.plotly_chart(fig_duration, use_container_width=True)
-
-    fig_water = px.bar(filtered_df, x='City', y='Water_Shortage_Impact', color='Year',
-                       title="Water Shortage Impact by City")
-    st.plotly_chart(fig_water, use_container_width=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
     st.subheader("💧 Water & Duration Summary")
     col1, col2 = st.columns(2)
@@ -153,4 +162,5 @@ with tab4:
     with col2:
         st.metric("Average Duration", f"{filtered_df['Duration_Days'].mean():.1f} days")
 
-    st.markdown('</div>', unsafe_allow_html=True)
+# Footer
+st.markdown("<footer>Made with ❤️ by Abrar • 2025</footer>", unsafe_allow_html=True)
